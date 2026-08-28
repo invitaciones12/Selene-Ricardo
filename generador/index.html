@@ -112,11 +112,6 @@
 
     <div class="container">
         <h1>⚙️ Generador VIP</h1>
-        
-        <div class="form-group">
-            <label for="repo-url">URL Base (Tu GitHub Pages)</label>
-            <input type="text" id="repo-url" placeholder="https://username.github.io/repo" value="">
-        </div>
 
         <div class="form-group">
             <label for="guest-name">Nombre del Invitado/Familia</label>
@@ -124,12 +119,12 @@
         </div>
 
         <div class="form-group">
-            <label for="guest-passes">Número de Pases / Invitados (Opcional)</label>
+            <label for="guest-passes">Número de Pases / Invitados</label>
             <input type="number" id="guest-passes" placeholder="Ej. 2" min="1">
         </div>
 
         <div class="form-group">
-            <label for="table-num">Número de Mesa (Opcional)</label>
+            <label for="table-num">Número de Mesa</label>
             <input type="number" id="table-num" placeholder="Ej. 5">
         </div>
 
@@ -143,15 +138,8 @@
     </div>
 
     <script>
-        // Auto-fill base URL based on current location
-        document.addEventListener("DOMContentLoaded", () => {
-            const currentUrl = window.location.href;
-            const baseUrl = currentUrl.split('/generador')[0];
-            document.getElementById('repo-url').value = baseUrl;
-        });
-
         function generateLink() {
-            let baseUrl = document.getElementById('repo-url').value.replace(/\/$/, "");
+            const baseUrl = "https://invitaciones12.github.io/Selene-Ricardo";
             const name = document.getElementById('guest-name').value.trim();
             const passes = document.getElementById('guest-passes').value.trim();
             const table = document.getElementById('table-num').value.trim();
