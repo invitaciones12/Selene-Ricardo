@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Invitaciones | Selene & Ricardo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #5c4033; /* Dark Brown */
+            --accent: #d4af37; /* Gold */
+            --bg: #f9f6f0; /* Beige */
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(var(--accent) 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(92, 64, 51, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px dashed rgba(212, 175, 55, 0.5);
+            border-radius: 8px;
+            pointer-events: none;
+        }
+        h1 { 
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem; 
+            text-align: center; 
+            color: var(--primary); 
+            margin-bottom: 25px; 
+        }
+        .form-group { margin-bottom: 20px; position: relative; z-index: 2; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--primary); }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: #faf8f5;
+        }
+        input:focus { outline: none; border-color: var(--accent); background: #fff; }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            position: relative;
+            z-index: 2;
+        }
+        button:hover { background: #4a332a; }
+        button:active { transform: scale(0.98); }
+        
+        .result-box {
+            margin-top: 25px;
+            padding: 15px;
+            background: #faf8f5;
+            border: 1px dashed var(--accent);
+            border-radius: 8px;
+            display: none;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+        .result-box p { font-size: 0.85rem; color: var(--primary); margin-bottom: 10px; font-weight: bold; }
+        .link-output {
+            word-break: break-all;
+            color: #2563eb;
+            font-weight: 500;
+            margin-bottom: 15px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+        .copy-btn {
+            background: var(--accent);
+            padding: 10px 15px;
+            font-size: 0.9rem;
+        }
+        .copy-btn:hover { background: #b5952f; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>⚙️ Generador VIP</h1>
+        
+        <div class="form-group">
+            <label for="repo-url">URL Base (Tu GitHub Pages)</label>
+            <input type="text" id="repo-url" placeholder="https://username.github.io/repo" value="">
+        </div>
+
+        <div class="form-group">
+            <label for="guest-name">Nombre del Invitado/Familia</label>
+            <input type="text" id="guest-name" placeholder="Ej. Familia Pérez">
+        </div>
+
+        <div class="form-group">
+            <label for="guest-passes">Número de Pases / Invitados (Opcional)</label>
+            <input type="number" id="guest-passes" placeholder="Ej. 2" min="1">
+        </div>
+
+        <div class="form-group">
+            <label for="table-num">Número de Mesa (Opcional)</label>
+            <input type="number" id="table-num" placeholder="Ej. 5">
+        </div>
+
+        <button onclick="generateLink()">Generar Link 🔗</button>
+
+        <div class="result-box" id="result-box">
+            <p>¡Link generado con éxito! ✨</p>
+            <div class="link-output" id="link-output"></div>
+            <button class="copy-btn" onclick="copyLink()">Copiar al Portapapeles 📋</button>
+        </div>
+    </div>
+
+    <script>
+        // Auto-fill base URL based on current location
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.split('/generador')[0];
+            document.getElementById('repo-url').value = baseUrl;
+        });
+
+        function generateLink() {
+            let baseUrl = document.getElementById('repo-url').value.replace(/\/$/, "");
+            const name = document.getElementById('guest-name').value.trim();
+            const passes = document.getElementById('guest-passes').value.trim();
+            const table = document.getElementById('table-num').value.trim();
+
+            if (!name) {
+                alert("Por favor, ingresa el nombre del invitado.");
+                return;
+            }
+
+            // Build query params
+            const params = new URLSearchParams();
+            params.append('guest', name);
+            if (passes) params.append('passes', passes);
+            if (table) params.append('table', table);
+
+            const finalUrl = `${baseUrl}/index.html?${params.toString()}`;
+            
+            document.getElementById('link-output').innerText = finalUrl;
+            document.getElementById('result-box').style.display = 'block';
+        }
+
+        function copyLink() {
+            const textToCopy = document.getElementById('link-output').innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert("¡Link copiado al portapapeles! 🚀");
+            });
+        }
+    </script>
+</body>
+</html>
