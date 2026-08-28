@@ -92,20 +92,41 @@
         .result-box p { font-size: 0.85rem; color: var(--primary); margin-bottom: 10px; font-weight: bold; }
         .link-output {
             word-break: break-all;
-            color: #2563eb;
+            color: #333; /* Color azul eliminado, se cambia a gris oscuro */
             font-weight: 500;
             margin-bottom: 15px;
             background: #fff;
             padding: 10px;
             border-radius: 6px;
             border: 1px solid #eee;
-        }
-        .copy-btn {
-            background: var(--accent);
-            padding: 10px 15px;
             font-size: 0.9rem;
+            text-align: left;
         }
-        .copy-btn:hover { background: #b5952f; }
+        .share-btn {
+            background: var(--accent);
+            padding: 12px 15px;
+            font-size: 0.95rem;
+        }
+        .share-btn:hover { background: #b5952f; }
+
+        .status-msg {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2e7d32;
+            display: none;
+        }
+
+        .error-msg {
+            color: #c62828;
+            font-size: 0.85rem;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            display: none;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
     </style>
 </head>
 <body>
@@ -117,37 +138,54 @@
             <label for="guest-name">Nombre del Invitado/Familia</label>
             <input type="text" id="guest-name" placeholder="Ej. Familia Pérez">
         </div>
+        <div class="error-msg" id="error-msg">⚠️ Por favor, ingresa el nombre del invitado.</div>
 
         <div class="form-group">
-            <label for="guest-passes">Número de Pases / Invitados</label>
+            <label for="guest-passes">Número de Pases / Invitados (Opcional)</label>
             <input type="number" id="guest-passes" placeholder="Ej. 2" min="1">
         </div>
 
         <div class="form-group">
-            <label for="table-num">Número de Mesa</label>
+            <label for="table-num">Número de Mesa (Opcional)</label>
             <input type="number" id="table-num" placeholder="Ej. 5">
         </div>
 
         <button onclick="generateLink()">Generar Link 🔗</button>
 
         <div class="result-box" id="result-box">
-            <p>¡Link generado con éxito! ✨</p>
+            <p>Link generado: ✨</p>
             <div class="link-output" id="link-output"></div>
-            <button class="copy-btn" onclick="copyLink()">Copiar al Portapapeles 📋</button>
+            <button class="share-btn" onclick="shareLink()">Compartir Invitación 📤</button>
+            <div class="status-msg" id="status-msg">¡Enlace copiado al portapapeles! 📋</div>
         </div>
     </div>
 
     <script>
+        // Ocultar la caja de resultados (y el botón de compartir) si se modifica algún campo
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', () => {
+                document.getElementById('result-box').style.display = 'none';
+                document.getElementById('status-msg').style.display = 'none';
+            });
+        });
+
         function generateLink() {
             const baseUrl = "https://invitaciones12.github.io/Selene-Ricardo";
-            const name = document.getElementById('guest-name').value.trim();
+            const nameInput = document.getElementById('guest-name');
+            const errorMsg = document.getElementById('error-msg');
+            const name = nameInput.value.trim();
             const passes = document.getElementById('guest-passes').value.trim();
             const table = document.getElementById('table-num').value.trim();
 
             if (!name) {
-                alert("Por favor, ingresa el nombre del invitado.");
+                errorMsg.style.display = 'block';
+                nameInput.style.borderColor = '#c62828';
+                document.getElementById('result-box').style.display = 'none';
                 return;
             }
+
+            errorMsg.style.display = 'none';
+            nameInput.style.borderColor = '#e2e8f0';
 
             // Build query params
             const params = new URLSearchParams();
@@ -159,13 +197,31 @@
             
             document.getElementById('link-output').innerText = finalUrl;
             document.getElementById('result-box').style.display = 'block';
+            document.getElementById('status-msg').style.display = 'none';
         }
 
-        function copyLink() {
-            const textToCopy = document.getElementById('link-output').innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert("¡Link copiado al portapapeles! 🚀");
-            });
+        async function shareLink() {
+            const textToShare = document.getElementById('link-output').innerText;
+            // Texto corregido para compartir
+            const shareMessage = `Te invito a la boda de Selene y Ricardo: ${textToShare}`;
+            const statusMsg = document.getElementById('status-msg');
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Boda Selene & Ricardo',
+                        text: shareMessage,
+                        url: textToShare
+                    });
+                } catch (err) {
+                    // User cancelled or share failed, ignore
+                }
+            } else {
+                // Fallback for desktop or unsupported browsers
+                navigator.clipboard.writeText(shareMessage).then(() => {
+                    statusMsg.style.display = 'block';
+                });
+            }
         }
     </script>
 </body>
