@@ -271,6 +271,25 @@
             background-color: var(--primary);
             transform: translateY(-2px);
         }
+
+        /* Mobile Fix Added Here */
+        @media (max-width: 768px) {
+            .hero h1 { 
+                font-size: 3rem; 
+            }
+            .countdown-container { 
+                gap: 10px; 
+                flex-wrap: wrap; 
+                justify-content: center; 
+            }
+            .time-box { 
+                min-width: 75px; 
+                padding: 10px; 
+            }
+            .time-box span { 
+                font-size: 1.8rem; 
+            }
+        }
     </style>
 </head>
 <body>
@@ -379,9 +398,6 @@
             </div>
         </div>
     </section>
-
-    <!-- Music Mention -->
-    
 
     <!-- Photo Gallery Placeholder -->
     <section class="fade-in" style="margin-bottom: 50px;">
