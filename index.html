@@ -44,8 +44,8 @@
         }
 
         .modal-box {
-            background: #FDF9F1; /* Warm, rustic parchment cream */
-            border: 2px solid var(--accent); /* Solid gold outer border */
+            background: #FDF9F1;
+            border: 2px solid var(--accent);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(212, 175, 55, 0.15);
             padding: 60px 80px;
             border-radius: 6px; 
@@ -56,14 +56,10 @@
             transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Dashed inner border for rustic wedding feel */
         .modal-box::before {
             content: '';
             position: absolute;
-            top: 12px; 
-            left: 12px; 
-            right: 12px; 
-            bottom: 12px;
+            top: 12px; left: 12px; right: 12px; bottom: 12px;
             border: 1px dashed rgba(212, 175, 55, 0.7);
             pointer-events: none;
             border-radius: 4px;
@@ -81,7 +77,7 @@
         .modal-text {
             font-family: 'Great Vibes', cursive;
             font-size: 3.2rem;
-            color: #8B6508; /* Deep rustic gold/bronze */
+            color: #8B6508;
             margin-bottom: 35px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
             position: relative;
@@ -145,7 +141,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: linear-gradient(rgba(92, 64, 51, 0.75), rgba(92, 64, 51, 0.75)), url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop') center/cover;
+            background: linear-gradient(rgba(92, 64, 51, 0.75), rgba(92, 64, 51, 0.75)), url('image-big.jpeg') center/cover;
             color: white;
             text-align: center;
             padding: 20px;
@@ -272,23 +268,95 @@
             transform: translateY(-2px);
         }
 
-        /* Mobile Fix Added Here */
+        /* Image Carousel Styles (1:1 Square Aspect Ratio) */
+        .carousel-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            margin-top: 25px;
+            padding: 0 10px; 
+        }
+        
+        .carousel-container {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            gap: 15px;
+            padding-bottom: 15px;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+        
+        .carousel-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .carousel-img {
+            flex: 0 0 100%;
+            scroll-snap-align: center;
+            object-fit: cover;
+            aspect-ratio: 1 / 1; /* Forces a perfect 1:1 square ratio */
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* PC Navigation Arrows */
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(253, 249, 241, 0.9);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .left-btn { left: 15px; }
+        .right-btn { right: 15px; }
+
+        /* Custom image placeholders */
+        .reception-img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 1px solid var(--accent);
+        }
+        
+        .dress-code-img {
+            width: 65px;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        /* Mobile Fixes */
         @media (max-width: 768px) {
-            .hero h1 { 
-                font-size: 3rem; 
-            }
-            .countdown-container { 
-                gap: 10px; 
-                flex-wrap: wrap; 
-                justify-content: center; 
-            }
-            .time-box { 
-                min-width: 75px; 
-                padding: 10px; 
-            }
-            .time-box span { 
-                font-size: 1.8rem; 
-            }
+            .hero h1 { font-size: 3rem; }
+            .countdown-container { gap: 10px; flex-wrap: wrap; justify-content: center; }
+            .time-box { min-width: 75px; padding: 10px; }
+            .time-box span { font-size: 1.8rem; }
+            .carousel-btn { display: none; }
         }
     </style>
 </head>
@@ -324,8 +392,19 @@
         </div>
     </header>
 
-    <!-- Parents & Godparents Cards -->
+    <!-- Bible Quote Card (First Card) -->
     <section class="fade-in">
+        <div class="rustic-card">
+            <div class="ornament">❖</div>
+            <h2 style="font-family: 'Great Vibes', cursive; font-size: 3rem; margin-bottom: 15px;">Nuestro Amor</h2>
+            <p style="font-size: 1.2rem; font-style: italic; line-height: 1.8; color: var(--text); padding: 0 10px;">
+                "Si nos llenamos del amor de Dios cada día, nuestro amor será inquebrantable. Contigo quiero caminar siempre, tomados de la mano y con Dios en el centro de nuestra relación."
+            </p>
+        </div>
+    </section>
+
+    <!-- Parents & Godparents Cards -->
+    <section class="fade-in" style="padding-top: 0;">
         <!-- Parents Card -->
         <div class="rustic-card">
             <div class="ornament">❖</div>
@@ -372,41 +451,83 @@
     </section>
 
     <!-- Details Section -->
-    <section class="fade-in">
-        <div class="grid-2">
+    <section class="fade-in" style="padding-top: 0;">
+        <div style="display: flex; flex-direction: column; gap: 40px;">
+            
+            <!-- Reception Card -->
             <div class="rustic-card">
                 <div class="ornament">❖</div>
                 <h3>Recepción</h3>
                 <p style="margin-top:20px; font-size:1.2rem; font-weight:600; font-family:'Playfair Display', serif;">Sonora # 1278</p>
                 <p style="color:var(--text); font-size:0.95rem; margin-top:5px;">Esq. Con calle Acapulco</p>
-                <a href="https://www.google.com/maps/place/19°13'49.2"N+103°42'08.8"W/@19.2303441,-103.7023955,3a,75y,169.5h,85.77t/data=!3m7!1e1!3m5!1s1AdYtsPPgG6RYRMIBiXNNw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D4.228553087762663%26panoid%3D1AdYtsPPgG6RYRMIBiXNNw%26yaw%3D169.50029405332424!7i16384!8i8192!4m4!3m3!8m2!3d19.2303272!4d-103.7024511?hl=es&entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D" class="btn-link">Ver Mapa</a>
+                
+                <p style="margin-top:15px; font-size:1.4rem; font-weight:bold; color:var(--primary);">7:00 PM</p>
+                
+                <img src="recepcion.jpeg" alt="Lugar de Recepción" class="reception-img">
+                <br>
+                <a href="https://www.google.com/maps/@19.2303441,-103.7023955,3a,75y,167.89h,89.32t/data=!3m7!1e1!3m5!1s1AdYtsPPgG6RYRMIBiXNNw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0.683530706752336%26panoid%3D1AdYtsPPgG6RYRMIBiXNNw%26yaw%3D167.89158436712245!7i16384!8i8192?hl=es&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D"N+103°42'08.8"W/@19.2303441,-103.7023955,3a,75y,169.5h,85.77t/data=!3m7!1e1!3m5!1s1AdYtsPPgG6RYRMIBiXNNw!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D4.228553087762663%26panoid%3D1AdYtsPPgG6RYRMIBiXNNw%26yaw%3D169.50029405332424!7i16384!8i8192!4m4!3m3!8m2!3d19.2303272!4d-103.7024511?hl=es&entry=ttu&g_ep=EgoyMDI2MDgyNi4wIKXMDSoASAFQAw%3D%3D" class="btn-link">Ver Mapa</a>
             </div>
+            
+            <!-- Dress Code Card -->
             <div class="rustic-card">
                 <div class="ornament">❖</div>
                 <h3>Código de Vestimenta</h3>
                 <p style="margin-top:20px; font-weight:bold; color:var(--primary); font-size: 1.2rem; font-family:'Playfair Display', serif;">Formal</p>
-                <div style="margin-top:20px; display:flex; justify-content:space-around;">
+                
+                <div style="margin-top:30px; display:flex; justify-content:space-around;">
                     <div>
-                        <span style="font-size:2rem; display:block; margin-bottom:5px;">👔</span>
-                        <p style="font-size: 0.9rem;">Hombres: Traje</p>
+                        <img src="traje.png" alt="Traje" class="dress-code-img">
+                        <p style="font-size: 0.95rem; font-weight: 600;">Hombres: Traje</p>
                     </div>
                     <div>
-                        <span style="font-size:2rem; display:block; margin-bottom:5px;">👗</span>
-                        <p style="font-size: 0.9rem;">Mujeres: Vestido Largo</p>
+                        <img src="vestido.png" alt="Vestido Largo" class="dress-code-img">
+                        <p style="font-size: 0.95rem; font-weight: 600;">Mujeres: Vestido Largo</p>
                     </div>
                 </div>
             </div>
+            
         </div>
     </section>
 
-    <!-- Photo Gallery Placeholder -->
-    <section class="fade-in" style="margin-bottom: 50px;">
-        <div class="rustic-card" style="padding: 60px 20px;">
+    <!-- Cash Gift / Wishing Well Section -->
+    <section class="fade-in" style="padding-top: 0;">
+        <div class="rustic-card" style="padding: 45px 20px;">
+            <div class="ornament">❖</div>
+            <h2>Obsequios</h2>
+            <p style="font-size: 1.15rem; line-height: 1.7; color: var(--text); max-width: 600px; margin: 0 auto;">
+                Si deseas hacernos un obsequio, a la entrada de la celebración encontrarás sobres donde podrás depositar, tu regalo en efectivo.
+            </p>
+            <div style="font-size: 2.5rem; margin-top: 20px;">✉️</div>
+        </div>
+    </section>
+
+    <!-- Interactive Photo Gallery (1:1 Carousel) -->
+    <section class="fade-in" style="padding-top: 0; margin-bottom: 50px;">
+        <div class="rustic-card" style="padding: 50px 20px;">
             <div class="ornament">❖</div>
             <h2>Nuestros Momentos</h2>
-            <div style="background:var(--bg); border: 1px dashed var(--accent); height:250px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--primary); font-style:italic; margin-top: 20px;">
-                [ Galería de Fotos Aquí ]
+            
+            <div class="carousel-wrapper">
+                <button class="carousel-btn left-btn" id="scrollLeft">&#10094;</button>
+                
+                <div class="carousel-container" id="photo-carousel">
+                    <img src="image_moment-1.jpeg" class="carousel-img" alt="Momento 1">
+                    <img src="image_moment-2.jpeg" class="carousel-img" alt="Momento 2">
+                    <img src="image_moment-3.jpeg" class="carousel-img" alt="Momento 3">
+                    <img src="image_moment-4.jpeg" class="carousel-img" alt="Momento 4">
+                    <img src="image_moment-5.jpeg" class="carousel-img" alt="Momento 5">
+                    <img src="image_moment-6.jpeg" class="carousel-img" alt="Momento 6">
+                    <img src="image_moment-7.jpeg" class="carousel-img" alt="Momento 7">
+                    <img src="image_moment-8.jpeg" class="carousel-img" alt="Momento 8">
+                    <img src="image_moment-9.jpeg" class="carousel-img" alt="Momento 9">
+                    <img src="image_moment-10.jpeg" class="carousel-img" alt="Momento 10">
+                </div>
+                
+                <button class="carousel-btn right-btn" id="scrollRight">&#10095;</button>
             </div>
+            <p style="font-size: 0.85rem; margin-top: 15px; color: var(--text); opacity: 0.7; font-style: italic;">
+                ← Desliza para ver más →
+            </p>
         </div>
     </section>
 
@@ -457,7 +578,7 @@
         }
 
         // 2. Animated Countdown
-        const weddingDate = new Date("January 9, 2027 16:00:00").getTime();
+        const weddingDate = new Date("January 9, 2027 19:00:00").getTime();
         const x = setInterval(function() {
             const now = new Date().getTime();
             const distance = weddingDate - now;
@@ -486,6 +607,23 @@
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+
+	// 4. PC Carousel Arrow Navigation Logic (Single item scroll fix)
+	const carousel = document.getElementById('photo-carousel');
+	const scrollLeftBtn = document.getElementById('scrollLeft');
+	const scrollRightBtn = document.getElementById('scrollRight');
+
+	if(scrollLeftBtn && scrollRightBtn && carousel) {
+		scrollLeftBtn.addEventListener('click', () => {
+			const itemWidth = carousel.querySelector('.carousel-img').offsetWidth + 15; // Image width + gap
+			carousel.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+		});
+	
+		scrollRightBtn.addEventListener('click', () => {
+			const itemWidth = carousel.querySelector('.carousel-img').offsetWidth + 15; // Image width + gap
+			carousel.scrollBy({ left: itemWidth, behavior: 'smooth' });
+		});
+	}
     </script> 
 </body>
 </html>
