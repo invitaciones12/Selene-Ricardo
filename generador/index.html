@@ -92,7 +92,7 @@
         .result-box p { font-size: 0.85rem; color: var(--primary); margin-bottom: 10px; font-weight: bold; }
         .link-output {
             word-break: break-all;
-            color: #333; /* Color azul eliminado, se cambia a gris oscuro */
+            color: #333; 
             font-weight: 500;
             margin-bottom: 15px;
             background: #fff;
@@ -169,10 +169,13 @@
             });
         });
 
-        function generateLink() {
+        async function generateLink() {
             const baseUrl = "https://invitaciones12.github.io/Selene-Ricardo";
             const nameInput = document.getElementById('guest-name');
             const errorMsg = document.getElementById('error-msg');
+            const linkOutput = document.getElementById('link-output');
+            const resultBox = document.getElementById('result-box');
+            
             const name = nameInput.value.trim();
             const passes = document.getElementById('guest-passes').value.trim();
             const table = document.getElementById('table-num').value.trim();
@@ -180,7 +183,7 @@
             if (!name) {
                 errorMsg.style.display = 'block';
                 nameInput.style.borderColor = '#c62828';
-                document.getElementById('result-box').style.display = 'none';
+                resultBox.style.display = 'none';
                 return;
             }
 
@@ -195,26 +198,53 @@
 
             const finalUrl = `${baseUrl}/index.html?${params.toString()}`;
             
-            document.getElementById('link-output').innerText = finalUrl;
-            document.getElementById('result-box').style.display = 'block';
+            // Show loading state in UI
+            linkOutput.innerText = "Generando link corto... ⏳";
+            resultBox.style.display = 'block';
             document.getElementById('status-msg').style.display = 'none';
+
+            let urlToShare = finalUrl; // Default to long URL if shortening fails
+
+            // Try to shorten the URL via zip1.io
+            try {
+                const response = await fetch('https://zip1.io/api/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url: finalUrl })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    // Grab the shortened URL (fallback to long url if unexpected JSON structure)
+                    urlToShare = data.short_url || data.url || data.link || finalUrl;
+                } else {
+                    console.warn("Zip1 API rate limited or failed. Falling back to long URL. ⚠️");
+                }
+            } catch (error) {
+                console.error("Network error shortening URL. Falling back to long URL. 💥", error);
+            }
+
+            // Update the UI with whichever URL we ended up with
+            linkOutput.innerText = urlToShare;
         }
 
         async function shareLink() {
             const textToShare = document.getElementById('link-output').innerText;
-            // Texto corregido para compartir
-            const shareMessage = `Te invito a la boda de Selene y Ricardo: `;
+            // Bug fix: Appended the actual link to the share message! 🛠️
+            const shareMessage = `Te invito a la boda de Selene y Ricardo: ${textToShare}`;
             const statusMsg = document.getElementById('status-msg');
 
             if (navigator.share) {
                 try {
                     await navigator.share({
                         title: 'Boda Selene & Ricardo',
-                        text: shareMessage,
+                        text: 'Te invito a la boda de Selene y Ricardo: ',
                         url: textToShare
                     });
                 } catch (err) {
-                    // User cancelled or share failed, ignore
+                    console.warn("Share cancelled or failed.", err);
                 }
             } else {
                 // Fallback for desktop or unsupported browsers
